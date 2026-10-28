@@ -37,7 +37,10 @@ import {
 	resolveAdvisorDeliveryChannel,
 } from "../../src/advisor";
 import { createAdvisorMessageCard } from "@oh-my-pi/pi-tui/chat/advisor-message";
-import { setChatTranscriptDisplayPreferences } from "@oh-my-pi/pi-tui/chat/display-preferences";
+import {
+	chatTranscriptDisplayPreferences,
+	setChatTranscriptDisplayPreferences,
+} from "@oh-my-pi/pi-tui/chat/display-preferences";
 import { getThemeByName } from "@oh-my-pi/pi-tui/theme";
 import { obfuscateMessages } from "../../src/secrets/message-transform";
 import { SecretObfuscator } from "../../src/secrets/obfuscator";
@@ -6883,15 +6886,24 @@ describe("advisor", () => {
 			const note =
 				"This is a very long advisor note that will definitely exceed the restricted width constraint of thirty characters and should therefore wrap across multiple lines rather than getting truncated.";
 			const details = { notes: [{ note, severity: "concern" as const }] };
+			const prior = chatTranscriptDisplayPreferences.advisorCollapsedLines;
 			try {
 				setChatTranscriptDisplayPreferences({ advisorCollapsedLines: 1 });
 				const rows = createAdvisorMessageCard(details, () => false, uiTheme).render(30);
 				expect(rows.length).toBe(2);
 				expect(strip(rows)).not.toContain("truncated.");
+				expect(strip([rows[1]!]).trimEnd().endsWith("…")).toBe(true);
 				const expanded = createAdvisorMessageCard(details, () => true, uiTheme);
 				expect(strip(expanded.render(30))).toContain("truncated.");
+				setChatTranscriptDisplayPreferences({ advisorCollapsedLines: 5 });
+				const short = createAdvisorMessageCard(
+					{ notes: [{ note: "Short note.", severity: "concern" as const }] },
+					() => false,
+					uiTheme,
+				).render(30);
+				expect(strip(short)).not.toContain("…");
 			} finally {
-				setChatTranscriptDisplayPreferences({ advisorCollapsedLines: 0 });
+				setChatTranscriptDisplayPreferences({ advisorCollapsedLines: prior });
 			}
 		});
 	});

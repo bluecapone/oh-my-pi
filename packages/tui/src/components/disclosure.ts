@@ -19,8 +19,8 @@ export interface DisclosureOptions {
 	paddingX?: number;
 	/** Maximum physical rows retained from the collapsed-only preview, including its hint row. */
 	maxCollapsedRows?: number;
-	/** Build the final row when {@link DisclosureOptions.maxCollapsedRows} hides preview rows. */
-	collapsedHint?: (hiddenRows: number, width: number) => string;
+	/** Build the final row when {@link DisclosureOptions.maxCollapsedRows} hides preview rows; `replacedRow` is the preview row this hint takes the place of. */
+	collapsedHint?: (hiddenRows: number, width: number, replacedRow: string) => string;
 }
 
 interface RenderCache {
@@ -254,10 +254,11 @@ export class Disclosure implements Component {
 		}
 
 		const hint = this.#options.collapsedHint;
+		const kept = Math.max(0, maxRows - 1);
 		const bounded =
 			hint === undefined
 				? rows.slice(0, maxRows)
-				: [...rows.slice(0, Math.max(0, maxRows - 1)), hint(rows.length - Math.max(0, maxRows - 1), width)];
+				: [...rows.slice(0, kept), hint(rows.length - kept, width, rows[kept]!)];
 		this.#boundedCache = { source: rows, sourceSnapshot: [...rows], width, rows: bounded };
 		return bounded;
 	}

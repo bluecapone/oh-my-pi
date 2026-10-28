@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Disclosure` `collapsedHint` now receives the preview row it replaces, so a capped preview can keep that row's text and mark it with an ellipsis ([#PR](https://github.com/can1357/oh-my-pi/pull/PR) by [@bluecapone](https://github.com/bluecapone))
+
 ## [18.13.3] - 2026-10-28
 
 ### Added

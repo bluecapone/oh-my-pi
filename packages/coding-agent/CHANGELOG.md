@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- A collapsed advisor card capped by `display.advisorCollapsedLines` now ends its last line with `…` when note text is hidden ([#PR](https://github.com/can1357/oh-my-pi/pull/PR) by [@bluecapone](https://github.com/bluecapone))
+
 ### Fixed
 
 - Fixed `read` rejecting artifact URLs from truncation hints when cached approvals or restricted folders are configured ([#17282](https://github.com/can1357/oh-my-pi/pull/17282) by [@iliaal](https://github.com/iliaal)).

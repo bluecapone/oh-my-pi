@@ -276,6 +276,8 @@ export function createAdvisorMessageCard(
 		expanded: getExpanded(),
 		paddingX: 1,
 		maxCollapsedRows: chatTranscriptDisplayPreferences.advisorCollapsedLines || undefined,
+		collapsedHint: (_hidden, width, row) =>
+			truncateToWidth(`${row} ${uiTheme.fg("dim", "…")}`, width, Ellipsis.Unicode),
 	});
 	// The tool-output toggle owns expansion state; synchronize the controlled
 	// disclosure from the callback on every render.
